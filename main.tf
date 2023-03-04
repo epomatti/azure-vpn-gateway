@@ -68,7 +68,7 @@ resource "azurerm_subnet" "application" {
 ### Virtual Machine ###
 
 resource "azurerm_network_interface" "main" {
-  name                = "nic-${var.sys}"
+  name                = "nic-${var.affix}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
@@ -84,7 +84,7 @@ resource "azurerm_network_interface" "main" {
 }
 
 resource "azurerm_linux_virtual_machine" "main" {
-  name                  = "vm-${var.sys}"
+  name                  = "vm-${var.affix}"
   resource_group_name   = azurerm_resource_group.main.name
   location              = azurerm_resource_group.main.location
   size                  = var.vm_size
