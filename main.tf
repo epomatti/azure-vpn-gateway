@@ -35,7 +35,7 @@ resource "azurerm_network_security_rule" "internet" {
   priority                    = 100
   direction                   = "Inbound"
   access                      = "Allow"
-  protocol                    = "Tcp"
+  protocol                    = "*"
   source_port_range           = "*"
   destination_port_range      = "*"
   source_address_prefix       = "*"
@@ -65,6 +65,55 @@ resource "azurerm_subnet" "application" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
+### Virtual Machine ###
+
+resource "azurerm_network_interface" "main" {
+  name                = "nic-${var.sys}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+
+  ip_configuration {
+    name                          = "nginx"
+    subnet_id                     = azurerm_subnet.application.id
+    private_ip_address_allocation = "Dynamic"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "azurerm_linux_virtual_machine" "main" {
+  name                  = "vm-${var.sys}"
+  resource_group_name   = azurerm_resource_group.main.name
+  location              = azurerm_resource_group.main.location
+  size                  = var.vm_size
+  admin_username        = var.vm_admin_user
+  admin_password        = var.vm_admin_password
+  network_interface_ids = [azurerm_network_interface.main.id]
+
+  custom_data = filebase64("${path.module}/init.sh")
+
+  admin_ssh_key {
+    username   = var.vm_admin_user
+    public_key = file("~/.ssh/id_rsa.pub")
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
+    version   = "22.04.202302280"
+  }
+}
+
+### Gateway ###
+
 resource "azurerm_public_ip" "gateway" {
   name                = "pip-gateway-${var.affix}"
   location            = azurerm_resource_group.main.location
@@ -74,7 +123,7 @@ resource "azurerm_public_ip" "gateway" {
 }
 
 resource "azurerm_virtual_network_gateway" "main" {
-  name                = "vpng-gatewy"
+  name                = "vpng-${var.affix}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
