@@ -1,10 +1,15 @@
 #!/bin/sh
 
 export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
 
 # Update
-sudo apt update
+apt update
+apt upgrade -y
 
-# nginx
-sudo apt install nginx -y
-sudo ufw allow 'Nginx HTTP'
+# Nginx
+apt install nginx -y
+ufw allow 'Nginx HTTP'
+
+
+reboot

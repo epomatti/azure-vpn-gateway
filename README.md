@@ -2,7 +2,7 @@
 
 Azure VPN gateway with point-to-site VPN.
 
-<img src=".docs/vpn.png" width=400 />
+<img src=".docs/vpn.png" width=500 />
 
 > VPN resources take a long time to create
 

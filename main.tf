@@ -2,28 +2,18 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.46.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
+      version = "3.79.0"
     }
   }
 }
 
 ### Group ###
-
 resource "azurerm_resource_group" "main" {
   name     = "rg-${var.affix}"
   location = var.location
 }
 
 ### Network ###
-
 resource "azurerm_network_security_group" "main" {
   name                = "nsg-${var.affix}"
   location            = azurerm_resource_group.main.location
@@ -66,7 +56,6 @@ resource "azurerm_subnet" "application" {
 }
 
 ### Virtual Machine ###
-
 resource "azurerm_network_interface" "main" {
   name                = "nic-${var.affix}"
   location            = azurerm_resource_group.main.location
@@ -108,7 +97,7 @@ resource "azurerm_linux_virtual_machine" "main" {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts-gen2"
-    version   = "22.04.202302280"
+    version   = "latest"
   }
 }
 
@@ -132,7 +121,9 @@ resource "azurerm_virtual_network_gateway" "main" {
 
   active_active = false
   enable_bgp    = false
-  sku           = "VpnGw2"
+
+  sku        = "VpnGw2"
+  generation = "Generation2"
 
   ip_configuration {
     name                          = "vnetGatewayConfig"
