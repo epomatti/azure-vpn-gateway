@@ -1,0 +1,6 @@
+subscription_id   = ""
+workload          = "icecreamshop"
+location          = "eastus2"
+vm_size           = "Standard_DS1_v2"
+vm_admin_user     = "adminuser"
+vm_admin_password = "P@ssw0rd.123"

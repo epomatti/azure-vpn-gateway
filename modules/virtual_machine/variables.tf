@@ -6,7 +6,11 @@ variable "location" {
   type = string
 }
 
-variable "subscription_id" {
+variable "resource_group_name" {
+  type = string
+}
+
+variable "subnet_id" {
   type = string
 }
 
