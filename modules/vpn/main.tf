@@ -17,7 +17,7 @@ resource "azurerm_virtual_network_gateway" "main" {
   active_active = false
   enable_bgp    = true
 
-  sku        = "VpnGw1AZ"
+  sku        = "VpnGw2AZ"
   generation = "Generation2"
 
   ip_configuration {
