@@ -4,6 +4,7 @@ resource "azurerm_public_ip" "gateway" {
   resource_group_name = var.resource_group_name
   sku                 = "Standard"
   allocation_method   = "Static"
+  zones               = ["1"]
 }
 
 resource "azurerm_virtual_network_gateway" "main" {
